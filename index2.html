@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE BEER TOKACHI – CRAFT BEER STAND</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+
+:root{
+  --ink:#0e0c09;
+  --paper:#f7f3ec;
+  --paper2:#ede8dc;
+  --amber:#c8882a;
+  --amber-light:#e8b85a;
+  --white:#fdfaf4;
+  --muted:rgba(14,12,9,0.45);
+}
+
+body{
+  font-family:'Noto Sans JP',sans-serif;
+  background:var(--ink);
+  color:var(--white);
+  overflow-x:hidden;
+}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--ink);}
+::-webkit-scrollbar-thumb{background:var(--amber);}
+
+/* ─── NAV ─── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 56px;
+  mix-blend-mode:difference;
+}
+.nav-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:17px;letter-spacing:.18em;color:var(--white);
+  text-decoration:none;
+}
+.nav-links{display:flex;gap:32px;}
+.nav-links a{
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--white);text-decoration:none;opacity:.7;transition:opacity .2s;
+}
+.nav-links a:hover{opacity:1;}
+
+/* ─── HERO ─── */
+.hero{
+  position:relative;height:100vh;min-height:680px;
+  display:flex;align-items:flex-end;
+  padding:0 0 80px 72px;
+  overflow:hidden;
+  background:var(--ink);
+}
+.hero-bg-text{
+  position:absolute;
+  right:-40px;top:50%;transform:translateY(-50%);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(180px,22vw,300px);
+  line-height:.85;
+  color:rgba(255,255,255,0.03);
+  letter-spacing:-.02em;
+  pointer-events:none;user-select:none;white-space:nowrap;
+}
+.hero-line{
+  position:absolute;left:56px;top:0;bottom:0;
+  width:2px;background:var(--amber);
+  transform:scaleY(0);transform-origin:top;
+  animation:lineGrow .9s .2s cubic-bezier(.16,1,.3,1) forwards;
+}
+.hero-tag{
+  position:absolute;top:44px;left:72px;
+  font-size:10px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--amber);
+  opacity:0;animation:fadeUp .7s .8s forwards;
+}
+.hero-content{opacity:0;animation:fadeUp .8s .5s forwards;}
+.hero-number{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(100px,15vw,200px);
+  line-height:.85;
+  color:var(--amber);
+  letter-spacing:-.04em;
+}
+.hero-title{
+  font-family:'Noto Serif JP',serif;
+  font-size:clamp(28px,4vw,52px);
+  font-weight:700;line-height:1.55;
+  color:var(--white);
+  margin-bottom:28px;
+}
+.hero-sub{
+  font-size:12px;font-weight:300;
+  color:rgba(253,250,244,.5);
+  letter-spacing:.1em;line-height:2;
+  max-width:320px;
+}
+.hero-scroll{
+  position:absolute;right:56px;bottom:80px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  opacity:0;animation:fadeIn 1s 1.2s forwards;
+}
+.hero-scroll span{
+  font-size:9px;letter-spacing:.25em;text-transform:uppercase;
+  color:rgba(253,250,244,.3);writing-mode:vertical-rl;
+}
+.hero-scroll-bar{
+  width:1px;height:64px;
+  background:linear-gradient(to bottom,var(--amber),transparent);
+  animation:scrollAnim 2s ease-in-out infinite;
+}
+@keyframes scrollAnim{0%{transform:scaleY(1);opacity:1}100%{transform:scaleY(0);opacity:0;transform-origin:top}}
+
+/* ─── NAV STRIP ─── */
+.nav-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid rgba(253,250,244,.1);
+}
+.strip-item{
+  padding:26px 20px;
+  border-right:1px solid rgba(253,250,244,.1);
+  text-decoration:none;color:var(--white);
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:13px;letter-spacing:.06em;
+  background:var(--ink);
+  transition:background .2s,color .2s;
+}
+.strip-item:last-child{border-right:none;}
+.strip-item:hover{background:var(--amber);color:var(--ink);}
+.strip-item:hover .strip-arr{opacity:1;}
+.strip-arr{font-size:18px;opacity:.3;transition:opacity .2s;}
+
+/* ─── STORY ─── */
+.story{
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:600px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+/* ★ 写真に変更 */
+.story-visual{
+  position:relative;
+  overflow:hidden;
+}
+.story-visual img{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform .8s ease;
+}
+.story-visual:hover img{
+  transform:scale(1.03);
+}
+/* 右端にフェードかけてテキストへ自然につなぐ */
+.story-visual::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(to right, transparent 65%, #161410 100%);
+}
+
+.story-text{
+  background:#161410;
+  padding:80px 72px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.story-label{
+  font-size:10px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:24px;display:block;
+}
+.story-heading{
+  font-family:'Noto Serif JP',serif;
+  font-size:clamp(24px,3vw,36px);font-weight:700;
+  line-height:1.8;color:var(--white);
+  margin-bottom:28px;
+}
+.story-body{
+  font-size:13px;font-weight:300;
+  line-height:2.4;color:rgba(253,250,244,.55);
+  margin-bottom:36px;
+}
+.story-sig{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:24px;
+  color:rgba(253,250,244,.4);
+}
+.story-sig strong{
+  font-family:'Noto Sans JP',sans-serif;
+  font-style:normal;font-size:9px;
+  letter-spacing:.25em;text-transform:uppercase;
+  color:rgba(253,250,244,.25);
+  display:block;margin-bottom:6px;font-weight:300;
+}
+
+/* ─── BEERS ─── */
+.beers-section{
+  padding:100px 72px;
+  background:var(--paper);
+  color:var(--ink);
+}
+.beers-header{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:64px;
+}
+.beers-eyebrow{
+  font-size:10px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--amber);display:block;margin-bottom:12px;
+}
+.beers-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(36px,5vw,64px);
+  letter-spacing:.04em;line-height:.9;
+  color:var(--ink);
+}
+.beers-cta{
+  font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink);text-decoration:none;
+  border-bottom:1px solid var(--ink);padding-bottom:4px;
+  opacity:.5;transition:opacity .2s;
+}
+.beers-cta:hover{opacity:1;}
+.beer-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:2px;
+}
+.beer-card{
+  padding:36px 24px;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;gap:16px;
+  background:var(--paper2);
+  transition:background .2s,transform .2s;
+  cursor:default;
+}
+.beer-card:hover{background:var(--ink);transform:translateY(-4px);}
+.beer-card:hover .beer-name{color:var(--white);}
+.beer-card:hover .beer-desc{color:rgba(253,250,244,.5);}
+.beer-card:hover .beer-dot{background:var(--amber)!important;}
+.beer-dot{
+  width:48px;height:48px;border-radius:50%;
+  transition:background .2s;
+}
+.dot-pale{background:#8fba4e;}
+.dot-wheat{background:#c8a03a;}
+.dot-ipa{background:#c05028;}
+.dot-stout{background:#3d2b1f;}
+.dot-saison{background:#d4b84a;}
+.beer-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;letter-spacing:.1em;
+  color:var(--ink);transition:color .2s;
+}
+.beer-desc{
+  font-size:11px;font-weight:300;
+  line-height:1.8;color:var(--muted);
+  transition:color .2s;
+}
+
+/* ─── INFO ─── */
+.info-section{
+  display:grid;grid-template-columns:1fr 1fr;
+  background:var(--ink);
+}
+.info-left{
+  padding:100px 72px;
+  border-right:1px solid rgba(255,255,255,.06);
+}
+.info-heading{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(32px,4vw,52px);
+  letter-spacing:.05em;line-height:1.05;
+  color:var(--white);
+  margin-bottom:36px;
+}
+.info-copy{
+  font-family:'Noto Serif JP',serif;
+  font-size:15px;line-height:2.3;
+  color:rgba(253,250,244,.6);
+  margin-bottom:48px;
+}
+.info-details{border-top:1px solid rgba(255,255,255,.08);padding-top:36px;}
+.info-row{
+  display:flex;gap:24px;align-items:baseline;
+  margin-bottom:16px;
+  font-size:13px;color:rgba(253,250,244,.55);
+}
+.info-row dt{
+  font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(253,250,244,.25);min-width:56px;
+}
+.info-social{
+  display:flex;gap:14px;margin-top:32px;
+}
+.info-social a{
+  width:40px;height:40px;
+  border:1px solid rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(253,250,244,.5);text-decoration:none;
+  transition:border-color .2s,color .2s;
+}
+.info-social a:hover{border-color:var(--amber);color:var(--amber);}
+.info-right{
+  padding:100px 72px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.tap-label{
+  font-size:10px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:20px;display:block;
+}
+.tap-list{list-style:none;}
+.tap-list li{
+  padding:18px 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:13px;color:rgba(253,250,244,.65);
+}
+.tap-list li:first-child{border-top:1px solid rgba(255,255,255,.06);}
+.tap-name{font-weight:500;color:var(--white);}
+.tap-style{
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(253,250,244,.3);margin-left:12px;
+}
+.tap-abv{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;color:var(--amber);
+  margin-left:auto;padding-left:16px;
+}
+.tap-btn{
+  display:inline-flex;align-items:center;gap:12px;
+  margin-top:36px;padding:16px 28px;
+  border:1px solid rgba(255,255,255,.2);
+  font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--white);text-decoration:none;
+  transition:background .2s,border-color .2s;
+}
+.tap-btn:hover{background:var(--amber);border-color:var(--amber);color:var(--ink);}
+
+/* ─── FOOTER ─── */
+footer{
+  background:#080705;
+  padding:64px 72px 40px;
+  border-top:1px solid rgba(255,255,255,.05);
+  display:grid;grid-template-columns:1.2fr 1fr 1fr;
+  gap:48px;
+}
+.foot-brand{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;letter-spacing:.15em;color:var(--white);
+  display:flex;align-items:center;gap:12px;margin-bottom:10px;
+}
+.foot-brand svg{width:24px;height:24px;fill:rgba(253,250,244,.5);}
+.foot-tag{
+  font-size:10px;letter-spacing:.25em;text-transform:uppercase;
+  color:rgba(253,250,244,.2);margin-bottom:24px;
+}
+.foot-h{
+  font-size:9px;letter-spacing:.28em;text-transform:uppercase;
+  color:rgba(253,250,244,.25);margin-bottom:18px;
+}
+.foot-links a{
+  display:block;font-size:12px;
+  color:rgba(253,250,244,.45);text-decoration:none;
+  margin-bottom:10px;letter-spacing:.04em;
+  transition:color .2s;
+}
+.foot-links a:hover{color:var(--white);}
+.foot-info-row{
+  display:flex;gap:12px;font-size:12px;
+  color:rgba(253,250,244,.4);margin-bottom:10px;
+}
+.foot-info-label{
+  color:rgba(253,250,244,.2);min-width:44px;
+  font-size:9px;letter-spacing:.15em;text-transform:uppercase;
+  padding-top:2px;
+}
+.foot-bottom{
+  grid-column:1/-1;
+  border-top:1px solid rgba(255,255,255,.05);
+  padding-top:24px;
+  display:flex;justify-content:space-between;
+}
+.foot-bottom p{
+  font-size:10px;color:rgba(253,250,244,.15);letter-spacing:.08em;
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes lineGrow{to{transform:scaleY(1);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .75s ease,transform .75s ease;}
+.reveal.on{opacity:1;transform:none;}
+.reveal-delay-1{transition-delay:.1s;}
+.reveal-delay-2{transition-delay:.2s;}
+.reveal-delay-3{transition-delay:.3s;}
+
+/* ─── MOBILE ─── */
+@media(max-width:820px){
+  .nav{padding:16px 24px;}
+  .nav-links{gap:16px;}
+  .nav-links a:not(:last-child){display:none;}
+  .hero{padding:0 0 60px 32px;}
+  .hero-bg-text{font-size:120px;}
+  .hero-line{left:28px;}
+  .hero-tag{left:40px;}
+  .nav-strip{grid-template-columns:1fr 1fr;}
+  .story{grid-template-columns:1fr;}
+  .story-visual{height:320px;}
+  .story-visual::after{background:linear-gradient(to bottom,transparent 65%,#161410 100%);}
+  .story-text{padding:56px 28px;}
+  .beers-section{padding:60px 28px;}
+  .beers-header{flex-direction:column;align-items:flex-start;gap:20px;}
+  .beer-grid{grid-template-columns:repeat(3,1fr);}
+  .info-section{grid-template-columns:1fr;}
+  .info-left,.info-right{padding:60px 28px;}
+  footer{grid-template-columns:1fr;padding:48px 28px 32px;}
+  .foot-bottom{flex-direction:column;gap:8px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="nav-logo">THE BEER TOKACHI</a>
+  <div class="nav-links">
+    <a href="#story">Story</a>
+    <a href="#beers">Our beer</a>
+    <a href="#info">Tap room</a>
+    <a href="http://my-site-105706-109246thebeertokachi.square.site/" target="_blank">Online shop</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-line"></div>
+  <div class="hero-bg-text">BEER</div>
+  <p class="hero-tag">Craft Beer Stand — Obihiro, Tokachi</p>
+  <div class="hero-content">
+    <div class="hero-number">THE BEER TOKACHI</div>
+    <h1 class="hero-title">
+      一杯に込めて。
+    </h1>
+    <p class="hero-sub">
+    </p>
+  </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-bar"></div>
+    <span>scroll</span>
+  </div>
+</section>
+
+<!-- NAV STRIP -->
+<div class="nav-strip">
+  <a href="#story" class="strip-item">
+    <span>Story</span>
+    <span class="strip-arr">→</span>
+  </a>
+  <a href="#beers" class="strip-item">
+    <span>Our beer</span>
+    <span class="strip-arr">→</span>
+  </a>
+  <a href="#info" class="strip-item">
+    <span>Tap room &amp; Bottle shop</span>
+    <span class="strip-arr">→</span>
+  </a>
+  <a href="http://my-site-105706-109246thebeertokachi.square.site/" target="_blank" class="strip-item">
+    <span>Online shop</span>
+    <span class="strip-arr">→</span>
+  </a>
+</div>
+
+<!-- STORY -->
+<section id="story" class="story">
+
+  <!-- ★ ウサギSVG → 店内写真に差し替え -->
+  <div class="story-visual">
+    <img src="img_8652-1.jpg" alt="THE BEER TOKACHI 店内">
+  </div>
+
+  <div class="story-text">
+    <span class="story-label reveal">Our Story</span>
+    <h2 class="story-heading reveal reveal-delay-1">
+      この土地の恵みと、<br>
+      僕らのこだわりを<br>
+      詰め込んで。
+    </h2>
+    <p class="story-body reveal reveal-delay-2">
+      十勝の大地と共に<br>
+      素材の個性を引き出し、丁寧に、まっすぐに、<br>
+      ビールをつくっています。<br>
+      地元の人も、旅人も、犬も、みんなここでつながる。
+    </p>
+    <div class="reveal reveal-delay-3">
+      <div class="story-sig">
+        <strong>THE BEER TOKACHI</strong>
+        Kenta Fukushima
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BEERS -->
+<section id="beers" class="beers-section">
+  <div class="beers-header reveal">
+    <div class="beers-title-group">
+      <span class="beers-eyebrow">Our lineup</span>
+      <div class="beers-title">OUR<br>BEERS</div>
+    </div>
+    <a href="https://thebeertokachi.com/the-beer-tokachi/" target="_blank" class="beers-cta">
+      Today's tap list →
+    </a>
+  </div>
+  <div class="beer-grid">
+    <div class="beer-card reveal">
+      <div class="beer-dot dot-pale"></div>
+      <div class="beer-name">PALE ALE</div>
+      <div class="beer-desc">十勝の清水と<br>香り高いホップ</div>
+    </div>
+    <div class="beer-card reveal reveal-delay-1">
+      <div class="beer-dot dot-wheat"></div>
+      <div class="beer-name">WHEAT ALE</div>
+      <div class="beer-desc">柔らかな口当たり<br>フルーティな香り</div>
+    </div>
+    <div class="beer-card reveal reveal-delay-2">
+      <div class="beer-dot dot-ipa"></div>
+      <div class="beer-name">IPA</div>
+      <div class="beer-desc">力強いホップの<br>苦みと余韻</div>
+    </div>
+    <div class="beer-card reveal reveal-delay-3">
+      <div class="beer-dot dot-stout"></div>
+      <div class="beer-name">STOUT</div>
+      <div class="beer-desc">深いコクと<br>ロースト香</div>
+    </div>
+    <div class="beer-card reveal" style="transition-delay:.4s;">
+      <div class="beer-dot dot-saison"></div>
+      <div class="beer-name">SAISON</div>
+      <div class="beer-desc">軽やかな喉越し<br>スパイシーな風</div>
+    </div>
+  </div>
+</section>
+
+<!-- INFO -->
+<section id="info" class="info-section">
+  <div class="info-left">
+    <h2 class="info-heading reveal">
+      A DESTINATION<br>
+      FOR YOUR<br>
+      JOURNEY.
+    </h2>
+    <p class="info-copy reveal">
+      旅の終わりに、おいしいビールと<br>
+      心地よい時間を。<br>
+      地元の人も、旅人も、犬も、みんな<br>
+      ここでつながる。
+    </p>
+    <dl class="info-details reveal">
+      <div class="info-row">
+        <dt>Open</dt>
+        <dd>14:00 – 22:00</dd>
+      </div>
+      <div class="info-row">
+        <dt>Close</dt>
+        <dd>不定休</dd>
+      </div>
+      <div class="info-row">
+        <dt>住所</dt>
+        <dd>北海道帯広市西1条南8丁目2-1</dd>
+      </div>
+    </dl>
+    <div class="info-social reveal">
+      <a href="https://www.instagram.com/thebeertokachi/" target="_blank" aria-label="Instagram">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="2" width="20" height="20" rx="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+      <a href="https://www.facebook.com/thebeertokachi" target="_blank" aria-label="Facebook">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="info-right">
+    <span class="tap-label reveal">On tap today</span>
+    <ul class="tap-list reveal">
+      <li>
+        <span><span class="tap-name">Tokachi Pale Ale</span><span class="tap-style">Pale Ale</span></span>
+        <span class="tap-abv">4.8%</span>
+      </li>
+      <li>
+        <span><span class="tap-name">North Wheat</span><span class="tap-style">Wheat Ale</span></span>
+        <span class="tap-abv">4.2%</span>
+      </li>
+      <li>
+        <span><span class="tap-name">Harvest IPA</span><span class="tap-style">IPA</span></span>
+        <span class="tap-abv">6.5%</span>
+      </li>
+      <li>
+        <span><span class="tap-name">Dark Forest Stout</span><span class="tap-style">Stout</span></span>
+        <span class="tap-abv">5.8%</span>
+      </li>
+      <li>
+        <span><span class="tap-name">Wind Saison</span><span class="tap-style">Saison</span></span>
+        <span class="tap-abv">5.2%</span>
+      </li>
+    </ul>
+    <a href="https://thebeertokachi.com/the-beer-tokachi/" target="_blank" class="tap-btn reveal">
+      <span>Full tap list</span>
+      <span>→</span>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="foot-brand">
+      <svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+        <path d="M58 85 Q42 55 48 28 Q52 12 68 18 Q78 24 75 52 Q72 72 68 88Z"/>
+        <path d="M142 85 Q158 55 152 28 Q148 12 132 18 Q122 24 125 52 Q128 72 132 88Z"/>
+        <ellipse cx="100" cy="108" rx="52" ry="46"/>
+        <ellipse cx="100" cy="125" rx="28" ry="20"/>
+        <ellipse cx="100" cy="178" rx="58" ry="38"/>
+        <ellipse cx="156" cy="168" rx="12" ry="9" transform="rotate(20,156,168)"/>
+        <ellipse cx="72" cy="210" rx="16" ry="9"/>
+        <ellipse cx="118" cy="213" rx="16" ry="9"/>
+      </svg>
+      THE BEER TOKACHI
+    </div>
+    <p class="foot-tag">Craft Beer Stand</p>
+  </div>
+  <div>
+    <p class="foot-h">Menu</p>
+    <div class="foot-links">
+      <a href="#story">Story</a>
+      <a href="#beers">Our beer</a>
+      <a href="#info">Tap room &amp; Bottle shop</a>
+      <a href="http://my-site-105706-109246thebeertokachi.square.site/" target="_blank">Online shop</a>
+    </div>
+  </div>
+  <div>
+    <p class="foot-h">Info</p>
+    <div class="foot-info-row"><span class="foot-info-label">Open</span><span>14:00 – 22:00</span></div>
+    <div class="foot-info-row"><span class="foot-info-label">Close</span><span>不定休</span></div>
+    <div class="foot-info-row"><span class="foot-info-label">住所</span><span>北海道帯広市西1条南8丁目2-1</span></div>
+  </div>
+  <div class="foot-bottom">
+    <p>© 2025 THE BEER TOKACHI. All rights reserved.</p>
+    <p>CRAFT BEER STAND — OBIHIRO, TOKACHI, HOKKAIDO</p>
+  </div>
+</footer>
+
+<script>
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); }
+  });
+}, {threshold: 0.12});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
